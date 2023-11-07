@@ -1,10 +1,12 @@
 package pkg
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"reflect"
 	"runtime"
 	"testing"
+	"time"
 )
 
 func TestCalculateFactorialConcurrently(t *testing.T) {
@@ -95,41 +97,40 @@ func TestCalculateFactorialConcurrently(t *testing.T) {
 	}
 }
 
-//This test depends on number of CPU in your PC, use wisely
-
-//func TestCalculateFactorialConcurrentlyWithTime(t *testing.T) {
-//	type args struct {
-//		num      int
-//		cpuCount int
-//	}
-//	tests := []struct {
-//		name string
-//		args args
-//		want time.Duration
-//	}{
-//		{
-//			name: "Factorial 100",
-//			args: args{num: 10000, cpuCount: runtime.NumCPU()},
-//			want: time.Millisecond * 3,
-//		},
-//		{
-//			name: "Factorial 100",
-//			args: args{num: 100000, cpuCount: runtime.NumCPU()},
-//			want: time.Millisecond * 100,
-//		},
-//		{
-//			name: "Factorial 100",
-//			args: args{num: 1000000, cpuCount: runtime.NumCPU()},
-//			want: time.Second * 6,
-//		},
-//	}
-//	for _, tt := range tests {
-//		t.Run(tt.name, func(t *testing.T) {
-//			timeStart := time.Now()
-//			CalculateFactorialConcurrently(tt.args.num, tt.args.cpuCount)
-//			result := time.Now().Sub(timeStart)
-//			fmt.Println(result)
-//			assert.Less(t, result, tt.want)
-//		})
-//	}
-//}
+func TestCalculateFactorialConcurrentlyWithTime(t *testing.T) {
+	type args struct {
+		num      int
+		cpuCount int
+	}
+	tests := []struct {
+		name string
+		args args
+		want time.Duration
+	}{
+		{
+			name: "Factorial 10000",
+			args: args{num: 10000, cpuCount: runtime.NumCPU()},
+			want: time.Millisecond * 3,
+		},
+		{
+			name: "Factorial 100000",
+			args: args{num: 100000, cpuCount: runtime.NumCPU()},
+			want: time.Millisecond * 100,
+		},
+		{
+			name: "Factorial 1000000",
+			args: args{num: 1000000, cpuCount: runtime.NumCPU()},
+			want: time.Second * 6,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			timeStart := time.Now()
+			//CalculateFactorialConcurrently(tt.args.num, tt.args.cpuCount)
+			CalculateFactorialSequentially(tt.args.num)
+			result := time.Now().Sub(timeStart)
+			fmt.Println(result)
+			assert.Less(t, result, tt.want)
+		})
+	}
+}
