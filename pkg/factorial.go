@@ -28,10 +28,7 @@ func CalculateFactorialConcurrently(num int, cpuCount int) *big.Int {
 
 	result := big.NewInt(1)
 	for i := 0; i < counter; i++ {
-		select {
-		case num := <-ch:
-			result.Mul(result, num)
-		}
+		result.Mul(result, <-ch)
 	}
 	return result
 }
